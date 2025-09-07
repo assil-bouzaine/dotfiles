@@ -18,8 +18,8 @@ vim.api.nvim_set_keymap(
 
 -- jj to exit insert mode
 vim.api.nvim_set_keymap(
-  "i", -- insert mode
+  "t", -- insert mode
   "jj", -- keys to press
-  "<Esc>", -- what it does
+  "<C-\\><C-n>", -- what it does (switch to normal mode)
   { noremap = true, silent = true }
 )
