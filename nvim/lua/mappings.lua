@@ -7,4 +7,19 @@ local map = vim.keymap.set
 map("n", ";", ":", { desc = "CMD enter command mode" })
 map("i", "jk", "<ESC>")
 map("i", "jj", "<ESC>", { desc = "Exit insert mode with jj" })
--- map({ "n", "i", "v" }, "<C-s>", "<cmd> w <cr>")
+
+-- esc to exit insert mode
+vim.api.nvim_set_keymap(
+  "t", -- 't' for terminal mode
+  "<Esc>", -- key to press
+  "<C-\\><C-n>", -- what it does (switch to normal mode)
+  { noremap = true, silent = true }
+)
+
+-- jj to exit insert mode
+vim.api.nvim_set_keymap(
+  "i", -- insert mode
+  "jj", -- keys to press
+  "<Esc>", -- what it does
+  { noremap = true, silent = true }
+)
