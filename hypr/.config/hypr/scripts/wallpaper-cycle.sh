@@ -1,11 +1,10 @@
 #!/bin/bash
-
 # Directory containing your wallpapers
 WALLPAPER_DIR="$HOME/Pictures/Wallpapers"
 
-# Array of available transitions
+# Array of valid transitions (per awww docs)
 TRANSITIONS=(
-    "fade"
+    "simple"
     "wipe"
     "wave"
     "grow"
@@ -13,15 +12,19 @@ TRANSITIONS=(
     "any"
     "outer"
     "random"
+    "left"
+    "right"
+    "top"
+    "bottom"
 )
 
-# Start swww daemon if not running
-if ! pgrep -x "swww-daemon" > /dev/null; then
-    swww-daemon &
-    sleep 0.5  # wait for daemon to initialize
+# Start awww-daemon if not running
+if ! pgrep -x "awww-daemon" > /dev/null; then
+    awww-daemon &
+    sleep 0.5
 fi
 
-# Get list of images (limit to 10 or however many you have)
+# Get list of images
 mapfile -t IMAGES < <(find "$WALLPAPER_DIR" -type f \( -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.png" -o -iname "*.gif" -o -iname "*.webp" \) | shuf | head -n 15)
 
 if [ ${#IMAGES[@]} -eq 0 ]; then
@@ -35,19 +38,19 @@ while true; do
         # Pick a random transition
         TRANSITION="${TRANSITIONS[$RANDOM % ${#TRANSITIONS[@]}]}"
 
-        # Random transition duration (1-3 seconds)
-        DURATION=$((RANDOM % 3 + 1))
+        # Transition step: lower = smoother (range 1-255, ~20 is a nice middle ground)
+        STEP=$((RANDOM % 40 + 10))
 
         # Random FPS between 30-60
         FPS=$((RANDOM % 31 + 30))
 
-        swww img "$img" \
+        awww img "$img" \
             --transition-type "$TRANSITION" \
-            --transition-duration "$DURATION" \
+            --transition-step "$STEP" \
             --transition-fps "$FPS" \
             --transition-angle "$((RANDOM % 360))"
 
-        # Wait before switching (e.g., every 5 minutes = 300 seconds)
+        # Wait before switching
         sleep 60
     done
 
